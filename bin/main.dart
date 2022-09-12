@@ -2,7 +2,6 @@ import 'dart:io';
 
 void main() async {
   var dir = Directory('.');
-
   try {
     var dirList = dir.list();
     await for (final FileSystemEntity f in dirList) {
