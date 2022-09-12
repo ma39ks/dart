@@ -4,13 +4,13 @@ void main() async {
   var dir = Directory('.');
   try {
     var dirList = dir.list();
-    await for (final FileSystemEntity f in dirList) {
-      if (f is File) {
-        print('Found file ${f.path}');
-      } else if (f is Directory) {
-        print('Found dir ${f.path}');
+    dirList.forEach((element) {
+      if (element is File) {
+        print('Found file ${element.path}');
+      } else if (element is Directory) {
+        print('Found dir ${element.path}');
       }
-    }
+    });
   } catch (e) {
     print(e.toString());
   }
