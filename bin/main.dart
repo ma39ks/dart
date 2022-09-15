@@ -1,29 +1,28 @@
-import 'dart:io';
-import 'dart:math';
+import 'dart:async';
 
-Future<String> getC (String char) async {
+class Human {
+  String name;
+  int age;
+  bool sex;     // true - male
 
-  await Future.delayed(Duration(seconds: 2));
-  return char;
+  Human(this.name, this.age, this.sex);
 }
 
-void main() async {
-  var leng = ['а','б','в','г','д','е','ё','ж','з','и','к','л','м','н','о','п',
-    'р','с','т','у','ф','х','ч','ш','щ','ы','э','ю','я'];
-  var file = File('file.txt');
-  var sink = file.openWrite();
-  var rng = Random();
+void aped(StreamController belt, int i) {
+  belt.add(Human("te" * (i + 1), i * 3, (i % 2) == 0 ? false : true));
+}
 
-  try {
-    for (var i = 0; i < 21; i++) {
-      var tmp = await getC(leng[rng.nextInt(leng.length)]);
-      print(tmp);
-      sink.write(tmp);
-      print(file);
-    }
-  } catch (e) {
-    sink.close();
-    print(e.toString());
-  }
-  sink.close();
+void main() {
+
+  StreamController<Human> belt = StreamController();
+  belt.stream.listen((event) {
+    if (event.sex) { print(event.name); print(event.age); }
+  });
+
+  Stream<int> cout = Stream.periodic(Duration(seconds: 1), (tick) => tick);
+  StreamSubscription<int> subs = cout.listen((event) {
+    aped(belt, event);
+  });
+
+  Future.delayed(Duration(seconds: 10)).then((value) { subs.cancel(); }) ;
 }
